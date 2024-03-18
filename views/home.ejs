@@ -10,9 +10,12 @@
     <form action="/callPython" method="post">
         <label for="prompt">Enter Prompt for Stable Diffusion: </label>
         <input type="text" id="prompt" name="prompt">
-        <label for="prompt">Enter Prompt for Stable Diffusion: </label>
-        <input type="text" id="promp" name="promp">
         <input type="submit" value="Submit">
     </form>
+
+    <% if(display){ %>
+        <p>Here is your image <%= image %></p>
+    <% } %>
+
 </body>
 </html>

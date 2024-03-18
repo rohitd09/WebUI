@@ -10,13 +10,15 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'))
 
 app.get("/", (req, res) => {
-    res.render("home")
+    const { display, image } = req.query;
+    const displayBool = display === 'true';
+    res.render("home", { display: displayBool, image: image })
 });
 
 app.post("/callPython", (req, res) => {
-    const { prompt1, prompt2 } = req.body
-    console.log(`The prompt for SD is "${prompt1}" and "${prompt2}"`)
-    res.redirect("/")
+    const { prompt } = req.body
+    console.log(`The prompt for SD is "${prompt}".`)
+    res.redirect(`/?display=true&image=${encodeURIComponent(prompt)}`)
 });
 
 app.listen(port, () => {
