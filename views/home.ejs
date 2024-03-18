@@ -7,15 +7,14 @@
 </head>
 <body>
     <h3>Stable Diffusion Project</h3>
-    <form action="/callPython" method="post">
+    <form action="/" method="post">
         <label for="prompt">Enter Prompt for Stable Diffusion: </label>
         <input type="text" id="prompt" name="prompt">
         <input type="submit" value="Submit">
     </form>
 
     <% if(display){ %>
-        <p>Here is your image <%= image %></p>
+        <img src="data:image/jpeg;base64,<%= image %>" alt="<%= prompt %>">
     <% } %>
-
 </body>
 </html>
