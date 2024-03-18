@@ -14,14 +14,14 @@ Before you begin, ensure you have Node.js installed on your machine. If you do n
 
 1. Clone the repository to your local machine:
 
-```bash
+```sh
 git clone https://github.com/rohitd09/WebUI.git
-cd path-to-your-project
+cd WebUI
 ```
 
 2. Install the required npm packages
 
-```bash
+```sh
 npm install
 ```
 
@@ -48,3 +48,7 @@ nodemon index.js
 ```
 
 After starting the application, open your web browser and navigate to http://localhost:3000 (or the port specified in your project) to access the web interface.
+
+### Additional Notes
+
+1. The Stable Diffusion Pipiline is set to full precision this is necessary when using systems with NVIDIA GTX series GPUs, but if using RTX series it is efficient to switch to mixed precision by changing torch_dtype to torch.float16 from torch.float32.
