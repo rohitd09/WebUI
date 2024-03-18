@@ -5,9 +5,13 @@ import argparse
 from io import BytesIO
 from diffusers import StableDiffusionPipeline
 
+parser = argparse.ArgumentParser()
+parser.add_argument('--prompt', default="a photo of an astronaut riding a horse on mars", type=str)
+args = parser.parse_args()
+
 def run_sd(prompt):
     model_id = "runwayml/stable-diffusion-v1-5"
-    pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)
+    pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float32) # Use torch.float16 for mixed precision.
     pipe = pipe.to("cuda")
 
     image = pipe(prompt).images[0]
@@ -18,9 +22,6 @@ def run_sd(prompt):
     return img_str
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--prompt', default="a photo of an astronaut riding a horse on mars", type=str)
-    args = parser.parse_args()
     try:
         img_base64 = run_sd(prompt=args.prompt)
         print(img_base64)

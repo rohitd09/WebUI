@@ -35,7 +35,6 @@ app.post("/", (req, res) => {
 
     let imageBase64 = '';
     pythonProcess.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
         imageBase64 += data.toString();
     });
 
