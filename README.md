@@ -8,7 +8,19 @@ To get the website running on your local machine, follow the steps outlined belo
 
 ### Prerequisites
 
-Before you begin, ensure you have Node.js installed on your machine. If you do not have Node.js installed, follow the instructions on [Node.js official website](https://nodejs.org/) to install it.
+1. Before you begin, ensure you have Node.js installed on your machine. If you do not have Node.js installed, follow the instructions on [Node.js official website](https://nodejs.org/) to install it.
+
+2. Create a vitual environment
+
+```sh
+conda create -n WebUI python=3.11.*
+```
+
+3. Activate virtual environment
+
+```sh
+conda activate WebUI
+```
 
 ### Installation
 
@@ -29,6 +41,12 @@ npm install
 
 ```sh
 npm install nodemon -g
+```
+
+3. Install python libraries
+
+```sh
+pip install diffusers torch torchvision
 ```
 
 ### Running the application
