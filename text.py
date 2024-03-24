@@ -3,7 +3,7 @@ import torch
 import cv2
 from bs4 import BeautifulSoup
 from openai import OpenAI
-
+import os
 from scipy.ndimage import zoom
 from scipy.special import logsumexp
 
@@ -13,7 +13,6 @@ BLACK_PIXEL_PERCENTAGE = 0.90
 SALIENCY_THRESHOLD = 0.70
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 model = deepgaze_pytorch.DeepGazeIIE(pretrained=True).to(DEVICE)
-API_KEY = ""
 
 
 def saliency(image, thresh=SALIENCY_THRESHOLD):
@@ -152,7 +151,7 @@ def split_sentence(sentence, max_length=30):
 
 
 def get_gpt_response(query, max_length=160):
-    client = OpenAI(api_key=API_KEY)
+    client = OpenAI()
     query = f"Summarize within {max_length} characters including spaces (return only the summary) - " + query
     print("Query:", query)
     completion = client.chat.completions.create(
