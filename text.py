@@ -13,7 +13,7 @@ BLACK_PIXEL_PERCENTAGE = 0.90
 SALIENCY_THRESHOLD = 0.70
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 model = deepgaze_pytorch.DeepGazeIIE(pretrained=True).to(DEVICE)
-API_KEY = "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"
+API_KEY = ""
 
 
 def saliency(image, thresh=SALIENCY_THRESHOLD):
