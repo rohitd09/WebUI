@@ -26,6 +26,8 @@ def run_sd(prompt):
 
 if __name__ == "__main__":
     try:
+        #img_base64 = run_sd(prompt=args.prompt)
+        #print(img_base64)
         img = run_sd(prompt=args.prompt)
         add_text(img, args.prompt)
     except Exception as e:
