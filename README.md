@@ -70,3 +70,4 @@ After starting the application, open your web browser and navigate to http://loc
 ### Additional Notes
 
 1. The Stable Diffusion Pipiline is set to full precision this is necessary when using systems with NVIDIA GTX series GPUs, but if using RTX series it is efficient to switch to mixed precision by changing torch_dtype to torch.float16 from torch.float32.
+2. You need to set up a new environmental variable "OPENAI_API_KEY" and set it's value to your API key.
