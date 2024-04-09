@@ -2,7 +2,7 @@ import sys
 import base64
 import torch
 import argparse
-from io import BytesIO
+import os
 from diffusers import StableDiffusionPipeline
 from text import add_text
 
@@ -12,24 +12,15 @@ args = parser.parse_args()
 
 def run_sd(prompt):
     model_id = "runwayml/stable-diffusion-v1-5"
-    pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float32) # Use torch.float16 for mixed precision.
-    #pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)
+    pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)
     pipe = pipe.to("cuda")
-
     image = pipe(prompt).images[0]
-    #buffered = BytesIO()
-    #image.save(buffered, format="JPEG")
-    #img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')
-    #return img_str
-
-    return image
+    return add_text(image, prompt)
 
 if __name__ == "__main__":
     try:
-        #img_base64 = run_sd(prompt=args.prompt)
-        #print(img_base64)
-        img = run_sd(prompt=args.prompt)
-        add_text(img, args.prompt)
+        result = run_sd(prompt=args.prompt)
+        print(f"Result: {result}")
     except Exception as e:
         print(str(e), file=sys.stderr)
         sys.exit(1)
