@@ -1,13 +1,17 @@
 import numpy as np
 import torch
 import cv2
-from bs4 import BeautifulSoup
+#from bs4 import BeautifulSoup
 from openai import OpenAI
-import os
 from scipy.ndimage import zoom
 from scipy.special import logsumexp
-
 import deepgaze_pytorch
+import sys
+import os
+
+from config import OPENAI_API_KEY
+
+sys.stderr = open(os.devnull, 'w')
 
 BLACK_PIXEL_PERCENTAGE = 0.90
 SALIENCY_THRESHOLD = 0.70
@@ -120,7 +124,7 @@ def get_coords(image_rgb):
     tl2 = (start_row, start_col)
     br2 = (start_row + height, start_col + max_area // height)
     return (tl1[0] * cell_height, tl1[1] * cell_width, br1[0] * cell_height, br1[1] * cell_width), (
-    tl2[0] * cell_height, tl2[1] * cell_width, br2[0] * cell_height, br2[1] * cell_width)
+        tl2[0] * cell_height, tl2[1] * cell_width, br2[0] * cell_height, br2[1] * cell_width)
 
 
 def text_details(r):
@@ -131,11 +135,14 @@ def text_details(r):
     font_size = 19
     num_char = area / (font_size) ** 2
     max_chars = width // (font_size // 2)
-    print(font_size, int(num_char), max_chars, width, height)
+    #print(font_size, int(num_char), max_chars, width, height)
     return font_size, int(num_char), max_chars
 
 
 def split_sentence(sentence, max_length=30):
+    if sentence.startswith('"') and sentence.endswith('"'):
+        sentence = sentence[1:-1]
+    sentence = sentence.replace('"', "'")
     words = sentence.split(" ")
     chunks = []
     current_chunk = ""
@@ -151,9 +158,10 @@ def split_sentence(sentence, max_length=30):
 
 
 def get_gpt_response(query, max_length=160):
-    client = OpenAI()
+    #return "Lorem ipsum dolor sit"
+    client = OpenAI(api_key=OPENAI_API_KEY)
     query = f"Summarize within {max_length} characters including spaces (return only the summary) - " + query
-    print("Query:", query)
+    #print("Query:", query)
     completion = client.chat.completions.create(
         model="gpt-4",
         messages=[{"role": "user", "content": query}]
@@ -161,6 +169,7 @@ def get_gpt_response(query, max_length=160):
     return completion.choices[0].message.content
 
 
+"""
 def build_html(filename, text, coord):
     with open("template.html", "r") as f:
         soup = BeautifulSoup(f, "html.parser")
@@ -171,7 +180,7 @@ def build_html(filename, text, coord):
     new_img_des = '"Image_Generated.png"'
     new_x = f'{coord[1] + 10}'
     new_y = f'{coord[0] + 10}'
-    print(new_text_lines)
+    #print(new_text_lines)
     script.string = script.string.replace('"PLACEHOLDER_text"', new_text_lines)
     script.string = script.string.replace('"PLACEHOLDER_IMGSRC"', new_img_src)
     script.string = script.string.replace('"PLACEHOLDER_IMGDES"', new_img_des)
@@ -179,10 +188,11 @@ def build_html(filename, text, coord):
     script.string = script.string.replace('"PLACEHOLDER_y"', new_y)
     with open("idk.html", "w") as f:
         f.write(str(soup))
+"""
 
 
 def add_text(image, prompt):
-    fn = "Image.png"
+    fn = "./public/image/Image.png"
     image = np.array(image)
     cv2.imwrite(fn, image)
     image = saliency(image)
@@ -190,5 +200,7 @@ def add_text(image, prompt):
     fs, nc, mc = text_details(r1)
     response = get_gpt_response(prompt, nc)
     response = split_sentence(response, mc)
-    print(prompt, response)
-    build_html(fn, response, r1)
+    imgdes = "gen_text.png"
+    fn = fn.replace("./public", "")
+    #build_html(fn, response, r1)
+    return response, fn, imgdes, r1[1], r1[0]

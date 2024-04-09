@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Text Overlay</title>
+</head>
+<body>
+    <canvas id="demo"></canvas>
+    <script>
+        // Retrieve dynamic values passed from Express route
+        var textLines = [<%- textLines %>];
+        var imgSrc = <%- imgSrc %>;
+        var imgDes = <%- imgDes %>;
+        var x = <%= x %>;
+        var y = <%= y %>;
+
+        var img = new Image();
+        var canvas = document.getElementById("demo");
+        var ctx = canvas.getContext("2d");
+
+        img.onload = () => {
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight);
+
+            ctx.font = "19px Arial";
+            ctx.strokeStyle = "white";
+            ctx.lineWidth = 1;
+            ctx.fillStyle = "rgba(255, 255, 255, 0)";
+
+            var lineHeight = 19;
+            y += lineHeight;
+
+            for (var i = 0; i < textLines.length; i++) {
+                ctx.strokeText(textLines[i], x, y);
+                y += lineHeight;
+            }
+        };
+        img.src = imgSrc;
+    </script>
+</body>
+</html>
